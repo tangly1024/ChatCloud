@@ -3,10 +3,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.JScrollBar;
 
 
 public class ChatServer {
@@ -48,8 +53,11 @@ public class ChatServer {
 			setSize(400, 300);
 			setVisible(true);
 			
-			add(textArea, BorderLayout.CENTER);
-			
+			//布局
+			textArea.setLineWrap(true);//激活自动换行
+			textArea.setWrapStyleWord(true);//激活断行不断字
+			JScrollPane scrollPane = new JScrollPane(textArea);
+			add(scrollPane, BorderLayout.CENTER);
 			addWindowListener(new WindowAdapter() {
 				@Override
 				public void windowClosing(WindowEvent e) {
@@ -57,8 +65,6 @@ public class ChatServer {
 					System.exit(0);
 				}
 			});
-			
-			
 			
 		}
 		
