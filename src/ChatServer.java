@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import data.CODE;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -16,14 +18,17 @@ import java.awt.event.WindowEvent;
 
 public class ChatServer {
 
+	static Integer port = 123;
+	static ServerSocket ss =null;
+	static DataInputStream dis = null;
+	static Socket s = null;
+	
 	public static void main(String[] args) {
+		
+		ChatServer chatServer = new ChatServer();
 		
 		ServerWindow serverWindow = new ServerWindow();
 		serverWindow.init();
-		Integer port = 123;
-		ServerSocket ss =null;
-		DataInputStream dis = null;
-		Socket s = null;
 		
 		try {
 			//创建server
@@ -34,7 +39,6 @@ public class ChatServer {
 		}catch (IOException e2) {
 			serverWindow.textArea.setText(serverWindow.textArea.getText()+e2.toString()+"\n");
 		}
-		
 
 		//用死循环接收
 		while(!ss.isClosed()){
@@ -44,32 +48,46 @@ public class ChatServer {
 				serverWindow.textArea.setText(serverWindow.textArea.getText()+"\n"+s+"客户端连接\n");
 				dis = new DataInputStream(s.getInputStream());
 			} catch (IOException e4) {
-				try{
-					s.close();
-					dis.close();
-				}catch(IOException e5){
-					serverWindow.textArea.setText(serverWindow.textArea.getText()+e5.toString()+"关闭连接错误！"+"\n");
-				}
 				serverWindow.textArea.setText(serverWindow.textArea.getText()+e4.toString()+"连接中断！"+"\n");
+				chatServer.disconnect();
 			}
+			
 			//对收到的数据进行处理
-			while(!s.isClosed()){
-				try{
-					String inString = dis.readUTF();
-					serverWindow.textArea.setText(serverWindow.textArea.getText()+"客户端："+inString+"\n");
-				}catch(EOFException e1){
+			while (s!=null) {
+				if (!s.isClosed()) {
 					try{
-						s.close();
-						dis.close();
-					}catch(IOException e5){
-						serverWindow.textArea.setText(serverWindow.textArea.getText()+e5.toString()+"关闭连接错误！"+"\n");
-					}
-					serverWindow.textArea.setText(serverWindow.textArea.getText()+e1.toString()+"客户端已断开！"+"\n");
-				} catch (IOException e) {
-					serverWindow.textArea.setText(serverWindow.textArea.getText()+e.toString()+"错误！"+"\n");
+						String message = dis.readUTF();
+						serverWindow.textArea.setText(serverWindow.textArea.getText()+"客户端："+message+"\n");
+					}catch(EOFException e1){
+						chatServer.disconnect();
+						System.out.println("客户端断开！");
+						serverWindow.textArea.setText(serverWindow.textArea.getText()+"客户端已断开！"+"\n");
+					} catch (IOException e) {
+						serverWindow.textArea.setText(serverWindow.textArea.getText()+e.toString()+"错误！"+"\n");
+						chatServer.disconnect();
+					} 
 				}
 			}
-		
+		}
+	}
+	
+	public void disconnect(){
+		try{
+			if(s!=null){
+				s.close();
+			}
+			if(dis!=null){
+				dis.close();
+			}
+		}catch(IOException e){
+			System.out.println("关闭连接错误");
+		}finally{
+			if(s!=null){
+				s=null;
+			}
+			if(dis!=null){
+				dis=null;
+			}
 		}
 	}
 	//窗体内部类

@@ -29,7 +29,10 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JLabel;
+
+import data.CODE;
 
 public class ChatClient extends JFrame{
 
@@ -42,7 +45,6 @@ public class ChatClient extends JFrame{
 	
 	//连接服务端
 	private void connect(){
-		textArea.setText(textArea.getText()+"正在连接服务端...."+"\n");
 		try {
 			//连接的同时保存下输出流的引用
 			s = new Socket(serverURL, port);
@@ -55,48 +57,64 @@ public class ChatClient extends JFrame{
 			textArea.setText(textArea.getText()+"在"+serverURL+":"+ port + " 上没有找到服务器...."+"\n");
 		}catch (SocketException e) {
 			textArea.setText(textArea.getText()+"已从服务器断开连接"+"\n");
-		}
-		catch (IOException e2) {
-			// TODO Auto-generated catch block
+		}catch (IOException e2) {
 			textArea.setText(textArea.getText()+"连接错误...."+"\n"+e2.toString());
-		}
-	}
-	
-	//断开连接
-	private void disConnect(){
-		if(s!=null && dos !=null){
-			try {
-				dos.close();
-				s.close();
-				textArea.setText(textArea.getText()+"已断开与服务器的连接\n");
-				setTitle("客户端:连接已断开");
-			} catch (IOException e) {
-				textArea.setText(textArea.getText()+e.toString()+"并没有连接\n");
-			}
-		}else {
-			textArea.setText(textArea.getText()+"并没有连接\n");
 		}
 		
 	}
 	
+	//断开连接
+	private void disConnect(){
+		
+		if(s==null && dos ==null){
+			textArea.setText(textArea.getText()+"并没有连接\n");
+		}
+		
+		if(s!=null){
+			try {
+				s.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			s=null;
+			textArea.setText(textArea.getText()+"已断开与服务器的连接\n");
+			setTitle("客户端:连接已断开");
+		}
+		if(dos !=null){
+			try {
+				dos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dos=null;
+		}
+		
+		
+	}
+	
 	//输入框响应发送
-	private void send(){
-		String string = textField.getText().trim();
-		textArea.setText(textArea.getText()+string+"\n");
+	private void send(String message){
+		textArea.setText(textArea.getText()+"客户端："+message+"\n");
 		textField.setText("");
 		//一个输出流
 		try {
 			if(s!=null && !s.isClosed()){
-			dos.writeUTF(string);
+			dos.writeUTF(message);
 			dos.flush();
-//			dos.close();
+//				dos.close();
 			}else{
-				textArea.setText(textArea.getText()+"未连接服务器"+"\n");
+				setTitle("客户端:连接已断开");
+				textArea.setText(textArea.getText()+"\n--未连接服务器--\n");
 			}
+		} catch (SocketException e2) {
+			disConnect();
+			setTitle("客户端:连接已断开");
+			textArea.setText(textArea.getText()+"\n--已从服务器断开--\n");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			disConnect();
+			textArea.setText(textArea.getText()+e.toString());
+		} 
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -126,7 +144,8 @@ public class ChatClient extends JFrame{
 		textField.addActionListener(new ActionListener() {
 			//textField 预先响应了回车键事件
 			public void actionPerformed(ActionEvent e) {
-				send();
+				String message = textField.getText().trim();
+				send(message);
 			}
 
 		});
@@ -138,7 +157,14 @@ public class ChatClient extends JFrame{
 		menuBar.add(netMenu);
 		connectMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				connect();
+				textArea.setText(textArea.getText()+"正在连接服务端...."+"\n");
+				Thread connectThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						connect();
+					}
+				});
+				connectThread.start();
 			}
 		});
 		
