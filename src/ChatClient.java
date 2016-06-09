@@ -4,13 +4,15 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 
 import javax.swing.JTextField;
-import javax.tools.JavaCompiler;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.awt.event.ActionListener;
 
 public class ChatClient extends JFrame{
 
@@ -21,76 +23,48 @@ public class ChatClient extends JFrame{
 		this.setLocation(400, 200);
 		this.setSize(400, 300);
 		this.setTitle("客户端1");
+		textArea.setEditable(false);
 		//布局管理器
 		getContentPane().add(textArea,BorderLayout.CENTER);
+		
+		textField.addActionListener(new ActionListener() {
+			//textField 预先响应了回车键事件
+			public void actionPerformed(ActionEvent e) {
+				String string = textField.getText().trim();
+				textArea.setText(textArea.getText()+"\n"+string);
+				textField.setText("");
+			}
+		});
 		getContentPane().add(textField,BorderLayout.SOUTH);
 //		this.pack();
-		
-		textField.addActionListener(new TFListener());
 		
 		this.setVisible(true);
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				System.out.println("客户端退出..");
 				System.exit(0);
 			}
 		});
 		
 	}
 
-	private class TFListener implements javax.swing.Action{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String string = textField.getText().trim();
-			textArea.setText(string);
-			textField.setText("");
-		}
-
-		@Override
-		public Object getValue(String key) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void putValue(String key, Object value) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void setEnabled(boolean b) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean isEnabled() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void addPropertyChangeListener(PropertyChangeListener listener) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void removePropertyChangeListener(PropertyChangeListener listener) {
-			// TODO Auto-generated method stub
-			
-		}
-
-
-		
-	}
-	
 	private static final long serialVersionUID = 1L;
 	public static void main(String[] args) {
-		new ChatClient();
+		ChatClient chatClient = new ChatClient();
+		//创建网络连接
+		try {
+			chatClient.textArea.setText(chatClient.textArea.getText()+"\n"+"正在连接服务端....");
+			Socket s = new Socket("127.0.0.1", 123);
+			if(s.isConnected()){
+				chatClient.textArea.setText(chatClient.textArea.getText()+"\n"+"服务器连接成功....");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
   
