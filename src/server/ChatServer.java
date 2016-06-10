@@ -1,16 +1,14 @@
+package server;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-import data.CODE;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -36,6 +34,7 @@ public class ChatServer {
 			//创建server
 			ss = new ServerSocket(port);
 			serverWindow.textArea.setText("服务器启动成功！"+ss.getLocalSocketAddress().toString()+"\n");
+			serverWindow.repaint();//有时候界面无法显示，重绘窗口
 		}catch(SocketException e1){
 			serverWindow.textArea.setText(serverWindow.textArea.getText()+"无法启动服务器，端口号: "+port+" 已被占用"+"\n");
 		}catch (IOException e2) {
