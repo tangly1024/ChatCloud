@@ -1,34 +1,11 @@
 package client;
 
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import java.awt.BorderLayout;
-import javax.swing.JTextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.ButtonGroup;
-import javax.swing.JMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JComboBox;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JLabel;
-import data.CODE;
 
 public class ChatClient {
 
@@ -39,7 +16,7 @@ public class ChatClient {
 	Socket s = null;
 	DataOutputStream dos = null;
 	DataInputStream dis = null;
-	
+	Integer clientId = null;
 	String serverURL = "127.0.0.1";
 	int port = 123;
 	
@@ -59,11 +36,16 @@ public class ChatClient {
 			//连接的同时保存下输出流的引用
 			s = new Socket(serverURL, port);
 			if(s.isConnected()){
-				mainWindow.writeText("服务器连接成功....");
-				mainWindow.setTitle("客户端:已连接");
+				dos = new DataOutputStream(s.getOutputStream());
+				dis = new DataInputStream(s.getInputStream());
+				//获取服务端反馈的信息
+				String clientMessage = dis.readUTF();
+				mainWindow.writeText("服务端: "+clientMessage);
+				clientId = dis.readInt();
+				String clientUser = "ID: 游客"+clientId;
+				mainWindow.setTitle("客户端:已连接 "+clientUser);
 			}
-			dos = new DataOutputStream(s.getOutputStream());
-			dis = new DataInputStream(s.getInputStream());
+			
 		}catch(ConnectException e1){
 			mainWindow.writeText("在"+serverURL+":"+ port + " 上没有找到服务器....");
 		}catch (SocketException e) {
@@ -71,6 +53,13 @@ public class ChatClient {
 		}catch (IOException e2) {
 			mainWindow.writeText("连接错误....");
 		}
+		
+		//连接成功后启动监听服务器消息的线程；
+		new Thread(new Runnable() {
+			public void run() {
+				 receive();
+			}
+		}).start();
 		
 	}
 	
@@ -105,7 +94,7 @@ public class ChatClient {
 	
 	//输入框响应发送
 	public void send(String message){
-		mainWindow.writeText("客户端："+message);
+		mainWindow.writeText("游客"+clientId+":"+message);
 		mainWindow.cleanTextField();
 		//一个输出流
 		try {
@@ -126,6 +115,24 @@ public class ChatClient {
 		} 
 	}
 
+	//接受消息并且显示的方法
+	public void receive(){
+		while(s!=null && !s.isClosed()){
+			try {
+				if(s!=null && !s.isClosed()){
+				String message = dis.readUTF();
+				mainWindow.writeText(message);
+				}
+			} catch (SocketException e2) {
+				disConnect();
+				mainWindow.setTitle("客户端:连接出错");
+				mainWindow.writeText("\n--连接出错");
+			} catch (IOException e) {
+				disConnect();
+				mainWindow.writeText(e.toString());
+			} 
+		}
+	}
 
 }
   
