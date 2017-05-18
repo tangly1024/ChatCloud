@@ -4,11 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.tlyong1992</groupId>
-	<artifactId>chat-windows-client</artifactId>
+	<artifactId>chat-config</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>chat-windows-client</name>
-	<description>windows版客户端</description>
+	<name>chat-config</name>
+	<description>通用配置中心</description>
 
+	<modules>
+		<module>chat-cloud-config-client</module>
+		<module>chat-cloud-config-server</module>
+		<!--<module>chat-cloud-config-repo</module>-->
+	</modules>
 </project>

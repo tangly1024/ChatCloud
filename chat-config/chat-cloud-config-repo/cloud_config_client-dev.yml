@@ -1,0 +1,8 @@
+#  {application}-{profile}.fileType /master or json yml ...
+spring:
+  application:
+    name: chat-cloud-config-client
+server:
+  port: 3001
+
+version: 1.00

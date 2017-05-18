@@ -4,11 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.tlyong1992</groupId>
-	<artifactId>chat-windows-client</artifactId>
-	<version>1.0</version>
+	<artifactId>chat-api</artifactId>
+	<version>1.00</version>
 	<packaging>jar</packaging>
 
-	<name>chat-windows-client</name>
-	<description>windows版客户端</description>
+	<name>chat-api</name>
+	<description>About Api</description>
+
+	<modules>
+		<module>chat-eureka-client</module>
+		<module>chat-eureka-consumer</module>
+		<module>chat-eureka-server</module>
+	</modules>
 
 </project>

@@ -1,0 +1,24 @@
+server:
+  port: 1000
+spring:
+  application:
+    name: chat-eureka-server
+  boot:
+    admin:
+      url: http://localhost:1005  #应用服务监控
+
+eureka:
+  instance:
+    hostname: mione # Windx C:\Windows\System32\drivers\etc 设置
+  client:
+   #若取消集群注册中心配置 registerWithEureka  fetchRegistry  defaultZone 值修改 true
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://mione:1000/eureka/  #若集群改为除自己外其他注册中心路径  http://mitwo:2000/eureka/
+  server:
+    enable-self-preservation: false
+    renewalPercentThreshold: 0 #设置更新率阈值
+    eviction-interval-timer-in-ms: 20000 #毫秒 有关注册服务调用
+
+

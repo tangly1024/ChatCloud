@@ -4,11 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.tlyong1992</groupId>
-	<artifactId>chat-windows-client</artifactId>
+	<artifactId>chat-admin</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>chat-windows-client</name>
-	<description>windows版客户端</description>
+	<name>chat-admin</name>
+	<description>管理员模块</description>
 
+	<modules>
+		<module>chat-spring-boot-admin</module>
+	</modules>
 </project>
