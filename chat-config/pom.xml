@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.tlyong1992</groupId>
+	<artifactId>chat-config</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<name>chat-config</name>
+	<description>通用配置中心</description>
+
+	<modules>
+		<module>chat-cloud-config-client</module>
+		<module>chat-cloud-config-server</module>
+		<!--<module>chat-cloud-config-repo</module>-->
+	</modules>
+</project>
