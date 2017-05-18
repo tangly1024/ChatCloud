@@ -5,7 +5,7 @@ server:
 eureka:
   client:
     serviceUrl:
-       defaultZone: http://mione:1000/eureka/ #,http://mitwo:2000/eureka/
+       defaultZone: http://localhost:1000/eureka/ # http://mione:1000/eureka/ #,http://mitwo:2000/eureka/
 
 # Git仓库配置
 spring:
@@ -13,7 +13,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/MIYAOW/MI/
+          uri: https://github.com/tlyong1992/ChatCloud/
           search-paths: chat-config/chat-cloud-config-repo
           username: username
           password: password
