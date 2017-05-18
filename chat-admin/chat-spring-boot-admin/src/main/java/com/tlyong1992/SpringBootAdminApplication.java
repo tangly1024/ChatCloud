@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 @EnableAdminServer //开启Spring Boot Admin 服务
 @EnableDiscoveryClient
-public class MiSpringBootAdminApplication {
+public class SpringBootAdminApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MiSpringBootAdminApplication.class, args);
+		SpringApplication.run(SpringBootAdminApplication.class, args);
 	}
 }

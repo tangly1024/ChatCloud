@@ -13,6 +13,7 @@
 
 	<modules>
 		<module>chat-eureka-client</module>
+		<module>chat-eureka-client-api</module>
 		<module>chat-eureka-consumer</module>
 		<module>chat-eureka-server</module>
 	</modules>

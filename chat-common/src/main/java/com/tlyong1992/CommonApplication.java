@@ -8,12 +8,12 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class MiCommonApplication extends SpringBootServletInitializer{
+public class CommonApplication extends SpringBootServletInitializer{
 
-	private static Logger log = LoggerFactory.getLogger(MiCommonApplication.class);
+	private static Logger log = LoggerFactory.getLogger(CommonApplication.class);
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context =  SpringApplication.run(MiCommonApplication.class, args);
+		ConfigurableApplicationContext context =  SpringApplication.run(CommonApplication.class, args);
 		String[] activeProfiles = context.getEnvironment().getActiveProfiles();
 		for (String profile : activeProfiles){
 			log.info("String active profile:{}" ,profile);
